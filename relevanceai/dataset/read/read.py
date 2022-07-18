@@ -253,20 +253,23 @@ class Read(ClusterRead):
                 return pd.json_normalize(head_documents).head(n=n)
 
     def _show_json(self, documents, **kw):
-        from jsonshower import show_json
+        try:
+            from jsonshower import show_json
 
-        if not self.text_fields:
-            text_fields = pd.json_normalize(documents).columns.tolist()
-        else:
-            text_fields = self.text_fields
-        return show_json(
-            documents,
-            image_fields=self.image_fields,
-            audio_fields=self.audio_fields,
-            highlight_fields=self.highlight_fields,
-            text_fields=text_fields,
-            **kw,
-        )
+            if not self.text_fields:
+                text_fields = pd.json_normalize(documents).columns.tolist()
+            else:
+                text_fields = self.text_fields
+            return show_json(
+                documents,
+                image_fields=self.image_fields,
+                audio_fields=self.audio_fields,
+                highlight_fields=self.highlight_fields,
+                text_fields=text_fields,
+                **kw,
+            )
+        except ModuleNotFoundError:
+            return 
 
     def _repr_html_(self):
         documents = self.get_documents(include_after_id=False)
@@ -390,6 +393,7 @@ class Read(ClusterRead):
             documents = df.get_all_documents()
 
         """
+        #TODO: validate fields, filters and sort
         filters = [] if filters is None else filters
         sort = [] if sort is None else sort
         select_fields = [] if select_fields is None else select_fields
@@ -634,6 +638,7 @@ class Read(ClusterRead):
         filters: list
             Query for filtering the search results
         """
+        #TODO: validate fields, filters and sort
         filters = [] if filters is None else filters
         sort = [] if sort is None else sort
         select_fields = [] if select_fields is None else select_fields
@@ -824,20 +829,3 @@ class Read(ClusterRead):
                     null_count[field] += 1
 
         return null_count
-
-    def facets(
-        self,
-        fields: list,
-        date_interval: str = "monthly",
-        page_size: int = 5,
-        page: int = 1,
-        asc: bool = False,
-    ):
-        return self.datasets.facets(
-            dataset_id=self.dataset_id,
-            fields=fields,
-            date_interval=date_interval,
-            page_size=page_size,
-            page=page,
-            asc=asc,
-        )

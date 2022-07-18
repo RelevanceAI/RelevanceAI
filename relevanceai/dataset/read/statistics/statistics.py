@@ -298,6 +298,7 @@ class Statistics(APIClient):
             }
 
         """
+        #TODO: validate filters, groupby, metrics and sort
         return self.datasets.aggregate(
             dataset_id=self.dataset_id,
             groupby=groupby,
@@ -336,6 +337,7 @@ class Statistics(APIClient):
             ds.upsert_documents(documents)
             ds.facets(["sample_1_value"])
         """
+        #TODO: validate fields
         return self.datasets.facets(
             dataset_id=self.dataset_id,
             fields=fields,
@@ -344,10 +346,3 @@ class Statistics(APIClient):
             page=page,
             asc=asc,
         )
-
-    @track
-    def health_check(self, **kwargs):
-        # This is supposed to provide utilities
-        raise NotImplementedError()
-        # details = self.datasets.monitor.health(self.dataset_id, **kwargs)
-        # return details
