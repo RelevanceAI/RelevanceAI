@@ -50,7 +50,8 @@ class RelevanceAI(SyncAPIClient):
         self.project = project
 
         headers = {"Authorization": f"{self.project}:{self.api_key}"}
-        base_url = f"https://api-{self.region}.stack.tryrelevance.com/latest"
+        if base_url is None:
+            base_url = f"https://api-{self.region}.stack.tryrelevance.com/latest"
 
         super().__init__(base_url=base_url, headers=headers)
 
@@ -101,7 +102,8 @@ class AsyncRelevanceAI(AsyncAPIClient):
         self.project = project
 
         headers = {"Authorization": f"{self.project}:{self.api_key}"}
-        base_url = f"https://api-{self.region}.stack.tryrelevance.com/latest"
+        if base_url is None:
+            base_url = f"https://api-{self.region}.stack.tryrelevance.com/latest"
 
         super().__init__(base_url=base_url, headers=headers)
 
